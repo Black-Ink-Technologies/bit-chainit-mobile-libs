@@ -39,24 +39,18 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/vadym-at-swan/bit-auth-mobile",
-  "author": "bit <vadym.horban@swanlogic.com> (https://github.com/vadym-at-swan)",
+  "repository": "https://github.com/Black-Ink-Technologies/bit-auth-mobile",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/vadym-at-swan/bit-auth-mobile/issues"
-  },
-  "homepage": "https://github.com/vadym-at-swan/bit-auth-mobile#readme",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.5.0",
     "@react-native/eslint-config": "^0.72.2",
     "@release-it/conventional-changelog": "^5.0.0",
+    "@types/google-libphonenumber": "^7.4.30",
     "@types/jest": "^28.1.2",
     "@types/react": "~17.0.21",
     "@types/react-native": "0.70.0",
+    "@types/uuid": "^9.0.7",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "eslint": "^8.4.1",
@@ -65,8 +59,6 @@
     "jest": "^28.1.1",
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
-    "react": "18.2.0",
-    "react-native": "0.72.7",
     "react-native-builder-bob": "^0.20.0",
     "release-it": "^15.0.0",
     "turbo": "^1.10.7",
@@ -76,8 +68,10 @@
     "@types/react": "17.0.21"
   },
   "peerDependencies": {
+    "@tanstack/react-query": "*",
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-incode-sdk": "*"
   },
   "workspaces": [
     "example"
@@ -163,5 +157,27 @@
     "name": "RNMobileSpec",
     "type": "modules",
     "jsSrcsDir": "src"
+  },
+  "dependencies": {
+    "@bit-ui-libs/common": "^1.0.13",
+    "@tanstack/react-query": "*",
+    "base-64": "^1.0.0",
+    "core-js": "^3.33.3",
+    "google-libphonenumber": "^3.2.33",
+    "jwt-decode": "^4.0.0",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
+    "neverthrow": "^6.1.0",
+    "query-string": "^8.1.0",
+    "react-native-device-info": "^10.11.0",
+    "react-native-encrypted-storage": "^4.0.3",
+    "react-native-fs": "^2.20.0",
+    "react-native-inappbrowser-reborn": "^3.7.0",
+    "react-native-incode-sdk": "https://sdk-js.s3.amazonaws.com/react-native/react-native-incode-sdk-5.7.0-nvc.tgz",
+    "react-native-logs": "^5.0.1",
+    "react-native-permissions": "^3.10.1",
+    "react-native-pkce-challenge": "^5.2.0",
+    "uuid": "^9.0.1",
+    "zustand": "^4.4.6"
   }
 }
