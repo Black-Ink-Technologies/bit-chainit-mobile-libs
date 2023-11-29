@@ -26,11 +26,10 @@
     "!**/.*"
   ],
   "scripts": {
-    "example": "yarn workspace @bit-auth/mobile-example",
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
+    "clean": "del-cli android/build lib",
     "prepare": "bob build",
     "release": "release-it"
   },
@@ -40,7 +39,15 @@
     "android"
   ],
   "repository": "https://github.com/Black-Ink-Technologies/bit-auth-mobile",
+  "author": "bit <vadym.horban@swanlogic.com> (https://github.com/vadym-at-swan)",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Black-Ink-Technologies/bit-auth-mobile/issues"
+  },
+  "homepage": "https://github.com/Black-Ink-Technologies/bit-auth-mobile#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.5.0",
@@ -73,9 +80,6 @@
     "react-native": "*",
     "react-native-incode-sdk": "*"
   },
-  "workspaces": [
-    "example"
-  ],
   "packageManager": "yarn@3.6.1",
   "engines": {
     "node": ">= 18.0.0"
@@ -83,7 +87,6 @@
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
     ]
   },

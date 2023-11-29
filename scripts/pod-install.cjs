@@ -18,17 +18,13 @@ module.exports = {
             return;
           }
 
-          const result = child_process.spawnSync(
-            'yarn',
-            ['pod-install', 'example/ios'],
-            {
-              cwd: project.cwd,
-              env: process.env,
-              stdio: 'inherit',
-              encoding: 'utf-8',
-              shell: true,
-            }
-          );
+          const result = child_process.spawnSync('yarn', ['pod-install'], {
+            cwd: project.cwd,
+            env: process.env,
+            stdio: 'inherit',
+            encoding: 'utf-8',
+            shell: true,
+          });
 
           if (result.status !== 0) {
             throw new Error('Failed to run pod-install');
