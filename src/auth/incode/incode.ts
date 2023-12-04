@@ -3,7 +3,7 @@ import IncodeSdk, {
   type FaceLoginResult,
   type OnboardingResponse,
 } from 'react-native-incode-sdk';
-import { globalLogger } from '../common/logger';
+import { globalLogger } from '../../common/logger';
 
 export const INCODE_BYPASS_EMAILS = ['martin+reviewer@blackinktech.io'];
 
@@ -87,7 +87,6 @@ export class Incode {
 
   static getInstance() {
     if (this.skip) return IncodeMock;
-    console.log('apiKey', this.apiKey);
     return IncodeSdk;
   }
 }

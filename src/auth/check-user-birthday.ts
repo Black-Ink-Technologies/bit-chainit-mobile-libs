@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { globalLogger } from './common/logger';
+import { globalLogger } from '../common/logger';
 
 export function isUserOverEighteen(birthDate: string) {
   const birthDay = moment(birthDate);

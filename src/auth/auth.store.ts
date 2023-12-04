@@ -1,6 +1,6 @@
 import type { IncodeOcrResult } from '@bit-ui-libs/common';
 import { create } from 'zustand';
-import { clearAuthData } from './common/storage';
+import { clearAuthData } from '../common/storage';
 
 type AuthModes = 'sign-in' | 'sign-up';
 

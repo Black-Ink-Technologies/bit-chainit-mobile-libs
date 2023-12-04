@@ -17,8 +17,8 @@ import InAppBrowser, {
 } from 'react-native-inappbrowser-reborn';
 import { PERMISSIONS, RESULTS, request } from 'react-native-permissions';
 import pkceChallenge from 'react-native-pkce-challenge';
-import { globalLogger } from './common/logger';
-import { clearEncryptedStorage } from './common/storage';
+import { globalLogger } from '../common/logger';
+import { clearEncryptedStorage } from '../common/storage';
 import {
   type AcceptChallengeOptions,
   type AcceptChallengeRequest,
