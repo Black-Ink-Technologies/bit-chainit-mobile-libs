@@ -47,6 +47,7 @@ interface UseIncodeOnboardingOpts {
   onboardingFlowId: string;
   requestPhotoPermissions: (pickType: 'CAMERA' | 'LIBRARY') => Promise<Result<'denied' | 'granted' | 'limited', never>>;
   showAppSettingsModal: (type: string) => Promise<void>;
+  useMock?: boolean;
 }
 
 export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
@@ -128,6 +129,7 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
 
   const signUp = useCallback(
     async (userId: string, token: string, customInterviewId) => {
+      Incode.skip = opts.useMock ?? false;
       Incode.getInstance().showCloseButton(false);
       // queryClient.invalidateQueries({ queryKey: ['profile'] });
       // queryClient.invalidateQueries({ queryKey: ['profile-picture', userId] });
@@ -141,13 +143,13 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
         _interviewId = customInterviewId;
       }
 
-      const opts = {
+      const _opts = {
         userId,
         token,
         interviewId: _interviewId,
       };
-      globalLogger.debug('Calling authService.finishChallenge', opts);
-      const result = await finishChallenge(opts);
+      globalLogger.debug('Calling authService.finishChallenge', _opts);
+      const result = await finishChallenge(_opts);
       if (result.isErr()) {
         finishOnboarding(
           AuthErrorMessageEnum.FACE_ALREADY_REGISTERED === result?.error
@@ -187,23 +189,25 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
       userId: string,
       customInterviewId: string
     ) => {
+      Incode.skip = opts.useMock ?? false;
       // queryClient.invalidateQueries({ queryKey: ['profile'] });
       // queryClient.invalidateQueries({ queryKey: ['profile-picture', userId] });
 
       let _interviewId = interviewId.current || customInterviewId;
 
+
       if (timesCalledRef.current > 0) {
         return globalLogger.debug('Avoiding double finishChallenge call');
       }
-      const opts = {
+      const _opts = {
         userId,
         token,
         interviewId: _interviewId,
         transactionId,
       };
-      globalLogger.debug('Calling authService.finishChallenge', opts);
+      globalLogger.debug('Calling authService.finishChallenge', _opts);
       timesCalledRef.current++;
-      const result = await finishChallenge(opts);
+      const result = await finishChallenge(_opts);
       if (result.isErr()) {
         globalLogger.debug('Error is going to be handled');
         return handleError(result.error);
