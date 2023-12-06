@@ -1,15 +1,15 @@
-import axios from 'axios';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Platform } from 'react-native';
-// @ts-ignore
 import {
   ConsentActionTypesEnum,
   ENCRYPTED_STORAGE_KEYS,
   getErrorMessage,
   type IncodeOcrResult,
 } from '@bit-ui-libs/common';
+import axios from 'axios';
 import { decode } from 'base-64';
 import { jwtDecode, type JwtPayload } from 'jwt-decode';
+import type { Result } from 'neverthrow';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Platform } from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { globalLogger } from '../../common/logger';
 import { AuthErrorMessageEnum } from '../auth.service.interfaces';
@@ -25,8 +25,8 @@ import { isUserOverEighteen } from '../check-user-birthday';
 import { getParsedPhone } from '../phone-number';
 import { useUserStore } from '../user.store';
 import {
-  Incode,
   INCODE_BYPASS_EMAILS,
+  Incode,
   initializeIncode,
   isIncodeTestMode,
 } from './incode';
@@ -45,7 +45,7 @@ interface UseIncodeOnboardingOpts {
   compressImage: (image: { base64: string }) => Promise<string>;
   createConsent: (data: { type: ConsentActionTypesEnum }) => Promise<void>;
   onboardingFlowId: string;
-  requestPhotoPermissions: (pickType: 'CAMERA' | 'LIBRARY') => Promise<'denied' | 'granted' | 'limited'>;
+  requestPhotoPermissions: (pickType: 'CAMERA' | 'LIBRARY') => Promise<Result<'denied' | 'granted' | 'limited', never>>;
   showAppSettingsModal: (type: string) => Promise<void>;
 }
 
@@ -228,7 +228,7 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
       setFlowType('INCODE_ONBOARDING_FACE');
       globalLogger.info('Checking camera permissions');
       const result = await requestPhotoPermissions('CAMERA');
-      if (result !== 'granted' && result !== 'limited') return showAppSettingsModal('camera');
+      if (result.isErr()) return showAppSettingsModal('camera');
       globalLogger.debug('interviewId', interviewId);
       globalLogger.debug('sessionToken', sessionToken);
       const _interviewId = interviewId?.current || (await getInterviewId());
