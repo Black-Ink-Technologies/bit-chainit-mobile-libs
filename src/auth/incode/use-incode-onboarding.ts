@@ -1,23 +1,18 @@
+import axios from 'axios';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
-import axios from 'axios';
 // @ts-ignore
-import { decode } from 'base-64';
 import {
-  ENCRYPTED_STORAGE_KEYS,
   ConsentActionTypesEnum,
+  ENCRYPTED_STORAGE_KEYS,
   getErrorMessage,
   type IncodeOcrResult,
 } from '@bit-ui-libs/common';
+import { decode } from 'base-64';
+import { jwtDecode, type JwtPayload } from 'jwt-decode';
 import EncryptedStorage from 'react-native-encrypted-storage';
-
-import {
-  INCODE_BYPASS_EMAILS,
-  Incode,
-  initializeIncode,
-  isIncodeTestMode,
-} from './incode';
-import { type JwtPayload, jwtDecode } from 'jwt-decode';
+import { globalLogger } from '../../common/logger';
+import { AuthErrorMessageEnum } from '../auth.service.interfaces';
 import { useAuthStore } from '../auth.store';
 import {
   getBitAuthClaims,
@@ -26,11 +21,16 @@ import {
   setIncodeToken,
   setInterviewId,
 } from '../auth.utils';
-import { globalLogger } from '../../common/logger';
-import { AuthErrorMessageEnum } from '../auth.service.interfaces';
-import { useUserStore } from '../user.store';
-import { getParsedPhone } from '../phone-number';
 import { isUserOverEighteen } from '../check-user-birthday';
+import { getParsedPhone } from '../phone-number';
+import { useUserStore } from '../user.store';
+import {
+  Incode,
+  INCODE_BYPASS_EMAILS,
+  initializeIncode,
+  isIncodeTestMode,
+} from './incode';
+
 global.atob = decode;
 
 interface PermissionStatuses {
@@ -51,7 +51,7 @@ interface UseIncodeOnboardingOpts {
   compressImage: (image: { base64: string }) => Promise<string>;
   createConsent: (data: { type: ConsentActionTypesEnum }) => Promise<void>;
   onboardingFlowId: string;
-  checkRequestPermissions: (isCamera: boolean) => Promise<PermissionStatuses>;
+  requestPhotoPermissions: (pickType: 'CAMERA' | 'LIBRARY') => Promise<PermissionStatuses>;
   showAppSettingsModal: (type: string) => Promise<void>;
 }
 
@@ -60,7 +60,7 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
   const {
     sessionToken,
     onboardingFlowId,
-    checkRequestPermissions,
+    requestPhotoPermissions,
     showAppSettingsModal,
     finishChallenge,
     signInSuccess,
@@ -233,7 +233,7 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
       setSessionMessage('Starting session');
       setFlowType('INCODE_ONBOARDING_FACE');
       globalLogger.info('Checking camera permissions');
-      const { isGranted } = await checkRequestPermissions(true);
+      const { isGranted } = await requestPhotoPermissions('CAMERA');
       if (!isGranted) return showAppSettingsModal('camera');
       globalLogger.debug('interviewId', interviewId);
       globalLogger.debug('sessionToken', sessionToken);
@@ -276,7 +276,7 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
     setScreenLoading,
     setSessionMessage,
     setFlowType,
-    checkRequestPermissions,
+    requestPhotoPermissions,
     showAppSettingsModal,
     interviewId,
     sessionToken,
