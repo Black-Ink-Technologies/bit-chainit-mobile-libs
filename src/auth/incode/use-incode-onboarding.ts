@@ -528,6 +528,7 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
   ]);
 
   const start = useCallback(async () => {
+    Incode.skip = opts.useMock ?? false;
     globalLogger.debug('Calling initializeIncode');
     await initializeIncode();
     Incode.getInstance().showCloseButton(true);
@@ -569,7 +570,7 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
 
     return unsubscribers;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authMode]);
+  }, [opts.useMock, authMode]);
 
   const retry = useCallback(async () => {
     globalLogger.debug('Retrying incode flow', flowType);
