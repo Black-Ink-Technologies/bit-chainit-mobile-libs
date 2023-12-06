@@ -173,6 +173,7 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
       return true;
     },
     [
+      opts.useMock,
       setScreenLoading,
       interviewId,
       finishChallenge,
@@ -222,7 +223,7 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
         userId
       );
     },
-    [interviewId, finishChallenge, saveBitUserId, signInSuccess, handleError]
+    [opts.useMock, interviewId, finishChallenge, saveBitUserId, signInSuccess, handleError]
   );
 
   const startOnboarding = useCallback(async () => {
