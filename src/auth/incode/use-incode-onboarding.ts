@@ -33,12 +33,6 @@ import {
 
 global.atob = decode;
 
-interface PermissionStatuses {
-  isGranted: boolean;
-  isDenied: boolean;
-  isBlocked: boolean;
-}
-
 interface UseIncodeOnboardingOpts {
   // This is the sessionToken received from Auth0's Challenge URL
   sessionToken: string;
@@ -51,7 +45,7 @@ interface UseIncodeOnboardingOpts {
   compressImage: (image: { base64: string }) => Promise<string>;
   createConsent: (data: { type: ConsentActionTypesEnum }) => Promise<void>;
   onboardingFlowId: string;
-  requestPhotoPermissions: (pickType: 'CAMERA' | 'LIBRARY') => Promise<PermissionStatuses>;
+  requestPhotoPermissions: (pickType: 'CAMERA' | 'LIBRARY') => Promise<'denied' | 'granted' | 'limited'>;
   showAppSettingsModal: (type: string) => Promise<void>;
 }
 
@@ -233,8 +227,8 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
       setSessionMessage('Starting session');
       setFlowType('INCODE_ONBOARDING_FACE');
       globalLogger.info('Checking camera permissions');
-      const { isGranted } = await requestPhotoPermissions('CAMERA');
-      if (!isGranted) return showAppSettingsModal('camera');
+      const result = await requestPhotoPermissions('CAMERA');
+      if (result !== 'granted' && result !== 'limited') return showAppSettingsModal('camera');
       globalLogger.debug('interviewId', interviewId);
       globalLogger.debug('sessionToken', sessionToken);
       const _interviewId = interviewId?.current || (await getInterviewId());
