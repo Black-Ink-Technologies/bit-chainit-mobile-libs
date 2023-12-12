@@ -45,7 +45,9 @@ interface UseIncodeOnboardingOpts {
   compressImage: (image: { base64: string }) => Promise<string>;
   createConsent: (data: { type: ConsentActionTypesEnum }) => Promise<void>;
   onboardingFlowId: string;
-  requestPhotoPermissions: (pickType: 'CAMERA' | 'LIBRARY') => Promise<Result<'denied' | 'granted' | 'limited', never>>;
+  requestPhotoPermissions: (
+    pickType: 'CAMERA' | 'LIBRARY'
+  ) => Promise<Result<'denied' | 'granted' | 'limited', never>>;
   showAppSettingsModal: (type: string) => Promise<void>;
   useMock?: boolean;
 }
@@ -196,7 +198,6 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
 
       let _interviewId = interviewId.current || customInterviewId;
 
-
       if (timesCalledRef.current > 0) {
         return globalLogger.debug('Avoiding double finishChallenge call');
       }
@@ -223,7 +224,14 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
         userId
       );
     },
-    [opts.useMock, interviewId, finishChallenge, saveBitUserId, signInSuccess, handleError]
+    [
+      opts.useMock,
+      interviewId,
+      finishChallenge,
+      saveBitUserId,
+      signInSuccess,
+      handleError,
+    ]
   );
 
   const startOnboarding = useCallback(async () => {
@@ -250,7 +258,6 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
         flowConfig: [
           // "Phone" is bugged on some iPhones
           { module: 'SelfieScan' },
-          { module: 'Phone', enabled: Platform.OS === 'android' },
           { module: 'Approve' },
         ],
         sessionConfig: {
