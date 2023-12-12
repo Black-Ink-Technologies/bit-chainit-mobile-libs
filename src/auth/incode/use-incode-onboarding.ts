@@ -9,7 +9,6 @@ import { decode } from 'base-64';
 import { jwtDecode, type JwtPayload } from 'jwt-decode';
 import type { Result } from 'neverthrow';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Platform } from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { globalLogger } from '../../common/logger';
 import { AuthErrorMessageEnum } from '../auth.service.interfaces';
@@ -25,8 +24,8 @@ import { isUserOverEighteen } from '../check-user-birthday';
 import { getParsedPhone } from '../phone-number';
 import { useUserStore } from '../user.store';
 import {
-  INCODE_BYPASS_EMAILS,
   Incode,
+  INCODE_BYPASS_EMAILS,
   initializeIncode,
   isIncodeTestMode,
 } from './incode';
