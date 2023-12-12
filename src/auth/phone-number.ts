@@ -6,7 +6,7 @@ export function getParsedPhone(phone: string) {
   const countryCode = number?.getCountryCode();
   const countryCodeNumber = phoneUtil?.getRegionCodeForNumber(number);
 
-  phone.replace(`+${countryCodeNumber}`, '');
+  const formattedPhone = phone.replace(`+${countryCode}`, '');
 
-  return { countryCode, countryCodeNumber, formattedPhone: phone };
+  return { countryCode, countryCodeNumber, formattedPhone };
 }
