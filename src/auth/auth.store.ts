@@ -14,6 +14,7 @@ interface AuthStoreState {
   // If the user session expired while using the app,
   // then this will let us know what screen they were last in after re-authenticating.
   redirectScreenName: string;
+  redirectScreenParams: object;
   hasWallet: boolean;
   ocrData: IncodeOcrResult | null;
   signUpPhone: string;
@@ -27,7 +28,7 @@ interface AuthStoreState {
   setUserId: (userId: string) => void;
   setAuthMode: (authMode: AuthModes) => void;
   setPhotoPath: (photoPath: string) => void;
-  setRedirectScreenName: (s: string) => void;
+  setRedirectScreenName: (s: string, params: object) => void;
   setAuthenticated: (isAuthenticated: boolean) => void;
   setHasProfile: (hasProfile: boolean) => void;
   setHasWallet: (hasWallet: boolean) => void;
@@ -51,6 +52,7 @@ export const useAuthStore = create<AuthStoreState>((set) => ({
   hasProfile: false,
   photoPath: '',
   redirectScreenName: '',
+  redirectScreenParams: {},
   hasWallet: false,
   ocrData: null,
   signUpPhone: '',
@@ -61,7 +63,7 @@ export const useAuthStore = create<AuthStoreState>((set) => ({
   setUserId: (userId) => set({ userId }),
   setAuthMode: (authMode) => set({ authMode }),
   setPhotoPath: (photoPath) => set({ photoPath }),
-  setRedirectScreenName: (s) => set({ redirectScreenName: s }),
+  setRedirectScreenName: (s, params) => set({ redirectScreenName: s, redirectScreenParams: params }),
   setAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
   setHasProfile: (hasProfile) => set({ hasProfile }),
   setHasWallet: (hasWallet) => set({ hasWallet }),
