@@ -7,3 +7,4 @@ export * from './auth/incode';
 export * from './auth/check-user-birthday';
 export * from './auth/phone-number';
 export * from './auth/user.store';
+export * from './use-add-documents';
