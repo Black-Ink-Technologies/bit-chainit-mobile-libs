@@ -1,6 +1,7 @@
 import {
   type CompleteFycOnboardingRequest,
   ENCRYPTED_STORAGE_KEYS,
+  type IncodeOcrResult,
 } from '@bit-ui-libs/common';
 import axios, { type AxiosRequestConfig } from 'axios';
 import { useEffect, useRef, useState } from 'react';
@@ -9,6 +10,7 @@ import { Incode, initializeIncode } from './auth/incode';
 import { globalLogger } from './common/logger';
 import { getBitAuthClaims } from './auth/auth.utils';
 import { AuthErrorMessageEnum } from './auth/auth.service.interfaces';
+import { useAuthStore } from './auth/auth.store';
 
 interface UseAddDocumentsOptions {
   avatar?: string;
@@ -30,6 +32,7 @@ export function useAddDocuments({
   onError,
 }: UseAddDocumentsOptions) {
   const [verificationLoading, setVerificationLoading] = useState(false);
+  const { setOCRData } = useAuthStore();
   // const logger = useLogger({ namespace: 'Profile' });
   // const toast = useToast({ namespace: 'User Profile' });
   const incodeSessionToken = useRef<string | null>(null);
@@ -88,7 +91,9 @@ export function useAddDocuments({
       complete({
         module: 'ProcessId',
         listener: async (e) => {
-          globalLogger.info('ProcessID completed', e.result);
+          const ocrResult = e.result as IncodeOcrResult;
+          setOCRData(ocrResult);
+          globalLogger.info('ProcessID completed', ocrResult);
         },
       }),
       complete({
