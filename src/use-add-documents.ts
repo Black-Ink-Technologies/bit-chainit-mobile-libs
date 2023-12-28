@@ -18,6 +18,7 @@ interface UseAddDocumentsOptions {
   endUserService: any;
   INCODE_API_URL: string;
   ID_CAPTURE_FLOW: string;
+  shouldCheckFace?: boolean;
   onSuccess?: () => void;
   onError?: (error: string) => void;
 }
@@ -28,6 +29,7 @@ export function useAddDocuments({
   endUserService,
   INCODE_API_URL,
   ID_CAPTURE_FLOW,
+  shouldCheckFace,
   onSuccess,
   onError,
 }: UseAddDocumentsOptions) {
@@ -109,21 +111,22 @@ export function useAddDocuments({
     try {
       setVerificationLoading(true);
       const { userId } = await getBitAuthClaims();
-      const customerUUID = await EncryptedStorage.getItem(
-        ENCRYPTED_STORAGE_KEYS.incodeUserId
-      );
-      const { faceMatched } = await Incode.getInstance().startFaceLogin({
-        showTutorials: false,
-        faceMaskCheck: false,
-        customerUUID: customerUUID ?? undefined,
-      });
+      if (shouldCheckFace) {
+        const customerUUID = await EncryptedStorage.getItem(
+          ENCRYPTED_STORAGE_KEYS.incodeUserId
+        );
+        const { faceMatched } = await Incode.getInstance().startFaceLogin({
+          showTutorials: false,
+          faceMaskCheck: false,
+          customerUUID: customerUUID ?? undefined,
+        });
 
-      if (!faceMatched) {
-        setVerificationLoading(false);
-        onError && onError(AuthErrorMessageEnum.WRONG_FACE);
-        return;
+        if (!faceMatched) {
+          setVerificationLoading(false);
+          onError && onError(AuthErrorMessageEnum.WRONG_FACE);
+          return;
+        }
       }
-
       const { status } = await Incode.getInstance().startOnboarding({
         flowConfig: [
           { module: 'IdScanFront' },
