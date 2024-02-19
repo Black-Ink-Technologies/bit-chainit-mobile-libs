@@ -2,7 +2,7 @@ import { isEmulator } from 'react-native-device-info';
 import IncodeSdk, {
   type FaceLoginResult,
   type OnboardingResponse,
-} from 'react-native-incode-sdk';
+} from '@incode-sdks/react-native-incode-sdk';
 import { globalLogger } from '../../common/logger';
 
 export const INCODE_BYPASS_EMAILS = ['martin+reviewer@blackinktech.io'];
