@@ -76,10 +76,10 @@
     "@types/react": "17.0.21"
   },
   "peerDependencies": {
+    "@incode-sdks/react-native-incode-sdk": "*",
     "@tanstack/react-query": "*",
     "react": "*",
-    "react-native": "*",
-    "react-native-incode-sdk": "*"
+    "react-native": "*"
   },
   "packageManager": "yarn@3.6.1",
   "engines": {
@@ -164,6 +164,7 @@
   },
   "dependencies": {
     "@bit-ui-libs/common": "^1.0.13",
+    "@incode-sdks/react-native-incode-sdk": "^6.0.0",
     "@tanstack/react-query": "*",
     "base-64": "^1.0.0",
     "core-js": "^3.33.3",
@@ -177,7 +178,6 @@
     "react-native-encrypted-storage": "^4.0.3",
     "react-native-fs": "^2.20.0",
     "react-native-inappbrowser-reborn": "^3.7.0",
-    "react-native-incode-sdk": "https://sdk-js.s3.amazonaws.com/react-native/react-native-incode-sdk-5.7.0-nvc.tgz",
     "react-native-logs": "^5.0.1",
     "react-native-permissions": "^3.10.1",
     "react-native-pkce-challenge": "^5.2.0",
