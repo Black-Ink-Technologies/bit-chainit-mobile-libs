@@ -151,7 +151,7 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
       };
       globalLogger.debug('Calling authService.finishChallenge', _opts);
       const result = await finishChallenge(_opts);
-      if (result.isErr()) {
+      if (result?.isErr()) {
         finishOnboarding(
           AuthErrorMessageEnum.FACE_ALREADY_REGISTERED === result?.error
             ? 'FaceAlreadyRegistered'
@@ -171,6 +171,10 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
         ENCRYPTED_STORAGE_KEYS.incodeUserId,
         userId
       );
+
+      if (opts.useMock) {
+        finishOnboarding('IncodeSkipIDComplete');
+      }
       return true;
     },
     [
@@ -266,7 +270,11 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
       });
       globalLogger.info('Incode.startOnboarding response:', onboardingResponse);
       if (onboardingResponse.status !== 'userCancelled') {
-        globalLogger.debug('Calling finishOnboarding');
+        globalLogger.debug('Calling finishOnboardingsss');
+
+        if (Incode.skip) {
+          await signUp('testmode', 'testmode', 'testmode');
+        }
         setScreenLoading(false);
         setSkipLoading(false);
         Incode.getInstance().finishOnboardingFlow();
@@ -295,7 +303,6 @@ export function useIncodeOnboarding(opts: UseIncodeOnboardingOpts) {
   const startIncodeFlow = useCallback(
     async (opts?: { skipIncode?: boolean }) => {
       Incode.getInstance().showCloseButton(true);
-      console.log('startIncodeFlow', Incode.apiKey, Incode.apiUrl);
       try {
         if (opts?.skipIncode) {
           globalLogger.debug(
