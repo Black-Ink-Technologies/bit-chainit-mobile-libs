@@ -46,7 +46,7 @@ export function useAddDocuments({
     let unsubscribers: any[];
     initializeIncode()
       .then(() => {
-        Incode.getInstance().showCloseButton(true);
+        Incode.getInstance().showCloseButton(false);
         unsubscribers = setupListeners();
       })
       .catch((err) => globalLogger.error(err));
