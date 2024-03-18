@@ -34,6 +34,7 @@ export function useAddDocuments({
   onError,
 }: UseAddDocumentsOptions) {
   const [verificationLoading, setVerificationLoading] = useState(false);
+  const isError = useRef(false);
   const { setOCRData } = useAuthStore();
   // const logger = useLogger({ namespace: 'Profile' });
   // const toast = useToast({ namespace: 'User Profile' });
@@ -91,6 +92,22 @@ export function useAddDocuments({
     const complete = Incode.getInstance().onStepCompleted;
     return [
       complete({
+        module: 'IdScanFront',
+        listener: (e) => {
+          globalLogger.info('ID scan front:', e.result);
+          // @ts-ignore
+          if (e.result.failReason === 'WRONG_DOCUMENT_SIDE') {
+            isError.current = true;
+          }
+        },
+      }),
+      complete({
+        module: 'IdScanBack',
+        listener: (e) => {
+          globalLogger.info('ID scan back: ', e.result);
+        },
+      }),
+      complete({
         module: 'ProcessId',
         listener: async (e) => {
           const ocrResult = e.result as IncodeOcrResult;
@@ -109,6 +126,7 @@ export function useAddDocuments({
 
   const addDocument = async () => {
     try {
+      isError.current = false;
       setVerificationLoading(true);
       const { userId } = await getBitAuthClaims();
       if (shouldCheckFace) {
@@ -129,8 +147,7 @@ export function useAddDocuments({
       }
       const { status } = await Incode.getInstance().startOnboarding({
         flowConfig: [
-          { module: 'IdScanFront' },
-          { module: 'IdScanBack' },
+          { module: 'IdScan' },
           { module: 'ProcessId' },
           { module: 'FaceMatch' },
         ],
@@ -174,12 +191,13 @@ export function useAddDocuments({
         // This should be the Interview ID (backend has bad name)
         sessionId: interviewId.current ?? '',
       };
+      setVerificationLoading(false);
+
       globalLogger.debug('Calling completeOnboarding:', req);
       await endUserService.completeFycOnboarding(userId, req);
 
       Incode.getInstance().finishOnboardingFlow();
-      setVerificationLoading(false);
-      onSuccess && onSuccess();
+      onSuccess && !isError.current && onSuccess();
     } catch (err) {
       setVerificationLoading(false);
       globalLogger.error(err);
@@ -188,5 +206,5 @@ export function useAddDocuments({
     setVerificationLoading(false);
   };
 
-  return { addDocument, verificationLoading };
+  return { addDocument, verificationLoading, isError: isError.current };
 }
