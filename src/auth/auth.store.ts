@@ -25,6 +25,7 @@ interface AuthStoreState {
   isInvitedToOrg: boolean;
   dateOfBirth: string;
   selfieScanSuccess: boolean;
+  signUpOrgId: string;
   setUserId: (userId: string) => void;
   setAuthMode: (authMode: AuthModes) => void;
   setPhotoPath: (photoPath: string) => void;
@@ -39,6 +40,7 @@ interface AuthStoreState {
   // This setter lets the caller update both flags for org-onboarding (above)
   setOrgInvitationState: (payload: { isInvitedToOrg: boolean }) => void;
   setSelfieScanSuccess: (selfieScanSuccess: boolean) => void;
+  setSignUpOrgId: (signUpOrgId: string) => void;
   // Recommended function to use when logic needs to imperatively logout of the app.
   // setAuthenticated is another way, however, does not clean up EncryptedStorage items.
   logout: () => void;
@@ -60,10 +62,12 @@ export const useAuthStore = create<AuthStoreState>((set) => ({
   isInvitedToOrg: false,
   dateOfBirth: '',
   selfieScanSuccess: false,
+  signUpOrgId: '',
   setUserId: (userId) => set({ userId }),
   setAuthMode: (authMode) => set({ authMode }),
   setPhotoPath: (photoPath) => set({ photoPath }),
-  setRedirectScreenName: (s, params) => set({ redirectScreenName: s, redirectScreenParams: params }),
+  setRedirectScreenName: (s, params) =>
+    set({ redirectScreenName: s, redirectScreenParams: params }),
   setAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
   setHasProfile: (hasProfile) => set({ hasProfile }),
   setHasWallet: (hasWallet) => set({ hasWallet }),
@@ -72,6 +76,7 @@ export const useAuthStore = create<AuthStoreState>((set) => ({
   setSignUpPhone: (signUpPhone) => set({ signUpPhone }),
   setSignUpPhoneCode: (signUpPhoneCode) => set({ signUpPhoneCode }),
   setOrgInvitationState: (payload) => set(payload),
+  setSignUpOrgId: (orgId) => set({ signUpOrgId: orgId }),
   setSelfieScanSuccess: (selfieScanSuccess) => set({ selfieScanSuccess }),
   logout: async () => {
     await clearAuthData();
